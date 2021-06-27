@@ -1,0 +1,47 @@
+from binance_chain.http import HttpApiClient
+from binance_chain.constants import KlineInterval
+from binance_chain.environment import BinanceEnvironment
+import create_sql as cs
+import pandas as pd
+from datetime import datetime
+
+with open('../bnb_acct.txt', 'r') as fp:
+    lines = fp.readlines()
+
+
+
+client = HttpApiClient()
+
+
+bnb_dict = {'coin':[],
+            'amt':[],
+            'address':[]
+
+
+
+}
+
+for l in lines:
+    l = l.strip()
+    account = client.get_account(l)
+    transactions = client.get_transactions(address=l)
+
+    print(account)
+    print(transactions)
+    bnb_dict['coin'].append( 'BNB')
+    bnb_dict['amt'].append(account['balances'][0]['free'])
+    bnb_dict['address'].append(l)
+
+print(bnb_dict)
+
+bnb_df = pd.DataFrame.from_dict(bnb_dict)
+bnb_df['date_added'] = datetime.now()
+
+
+engine = cs.sql_alc()
+
+
+
+bnb_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
+
+engine.dispose()

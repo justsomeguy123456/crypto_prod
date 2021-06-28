@@ -19,10 +19,11 @@ btc_dict = {'coin':[],
 
 for l in lines:
     l = l.strip()
-
+    print(l)
     bal = blockcypher.get_total_balance(l)
+    print(bal)
     bal = blockcypher.from_base_unit(bal, 'btc')
-
+    print(bal)
     btc_dict['coin'].append('BTC')
     btc_dict['amt'].append(bal)
     btc_dict['address'].append(l)

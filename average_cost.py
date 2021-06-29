@@ -57,13 +57,17 @@ for r in row:
     and coin = '{}'
 
 
+
     union
-    select wallet.coin,
+        select d.coin, d.price,sum(d.amt) amt, d.basis, d.date_added,type1
+	from
+	(
+	select distinct wallet.coin,
      0 price ,
-    case when wallet.coin = 'BNB' then wallet.amt::NUMERIC + 1 else wallet.amt::NUMERIC end amt
+   case when wallet.coin = 'BNB' then wallet.amt::NUMERIC + 1 else wallet.amt::NUMERIC end amt
     ,0 basis
     ,wallet.date_added,
-    'wallet'
+    'wallet' type1
     	from wallet
     	join (
     	select max(date_added) date, coin, address
@@ -71,6 +75,10 @@ for r in row:
     		group by  coin, address
     	) b on b.coin = wallet.coin and b.date = wallet.date_added
     	where wallet.coin = '{}'
+
+		) d
+
+		group by d.coin, d.price, d.basis, d.date_added,type1
     order by 5
      '''.format(coin,coin,coin)
 

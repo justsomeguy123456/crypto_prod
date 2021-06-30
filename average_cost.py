@@ -212,7 +212,7 @@ conn.close()
 
 engine = cs.sql_alc()
 fin_df.to_sql('avg_prices_ledger',con=engine, if_exists = 'replace', index = False)
-df_max_date.to_sql('portfolio_historical',con=engine, if_exists = 'append', index = False)
+df_max_date.to_sql('crypto_portfolio_historical',con=engine, if_exists = 'append', index = False)
 #fin_df.to_excel('../testing3.xlsx')
 
 engine.dispose()

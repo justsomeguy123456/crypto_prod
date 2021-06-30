@@ -62,7 +62,7 @@ for d in data:
     for o in owned_coin_list:
 
         if o.lower() == d['symbol']:
-            #print(d)
+            print(d)
             coin_dict['id'].append(d['id'])
             coin_dict['sym'].append(d['symbol'])
             coin_dict['link'].append('https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd'.format(d['id']))
@@ -79,7 +79,7 @@ coin_df['date_time'] = datetime.now()
 coin_df = coin_df.set_index("id")
 
 
-remove_list = ['binance-peg-cardano','binance-peg-bitcoin-cash',"compound-governance-token","binance-peg-dogecoin","golden-ratio-token","binance-peg-litecoin","binance-peg-filecoin"]
+remove_list = ['binance-peg-cardano','binance-peg-bitcoin-cash',"compound-governance-token","binance-peg-dogecoin","golden-ratio-token","binance-peg-litecoin","binance-peg-filecoin", "hymnode"]
 
 coin_df = coin_df.drop(remove_list)
 

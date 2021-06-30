@@ -1,7 +1,7 @@
 import pandas as pd
 import time
 import create_sql as cs
-
+from datetime import datetime
 conn = cs.pg2()
 
 
@@ -195,12 +195,24 @@ for r in row:
     fin_df = fin_df.append(df)
     #print('qty',rolling_qty,'rolling_basis',rolling_basis,'avg_price',avg_price,'realized_gain_total',realized_gain_total)
 
+df_max_date = fin_df.groupby('symbol')['time'].max()
+
+df_max_date = df_max_date.to_frame()
+
+df_max_date = df_max_date.merge(fin_df, how = 'inner', on =['time','symbol'])
+
+df_max_date['asofdate'] = datetime.now()
+
+print(df_max_date)
+
+
 
 cur.close()
 conn.close()
 
 engine = cs.sql_alc()
 fin_df.to_sql('avg_prices_ledger',con=engine, if_exists = 'replace', index = False)
+df_max_date.to_sql('portfolio_historical',con=engine, if_exists = 'append', index = False)
 #fin_df.to_excel('../testing3.xlsx')
 
 engine.dispose()

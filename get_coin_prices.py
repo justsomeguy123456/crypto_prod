@@ -1,47 +1,45 @@
 
 
-#from binance.client import Client
+
 import create_sql as cs
-#from coinbase.wallet.client import Client
+
 import json as j
 import requests
 import pandas as pd
 from datetime import datetime
-#with open('/home/nick/python_projects/crypto/key.txt', 'r') as fp:
+import getting_owned_coin_list as pwn
+
 with open('../key.txt', 'r') as fp:
     lines = fp.readlines()
 
 
-api_key = lines[1].strip()
-api_secret = lines[2].strip()
+#api_key = lines[1].strip()
+#api_secret = lines[2].strip()
 
 
+owned_coin_list = pwn.getting_coin_list()
 
-#client = Client(api_key, api_secret, tld='us')
-
-#with open('/home/nick/python_projects/crypto/postgres.txt', 'r') as fp:
-
-conn = cs.pg2()
-cur = conn.cursor()
+#conn = cs.pg2()
+#cur = conn.cursor()
 
 
-cur.execute('''select distinct symbol from public.binance_ledger
-where symbol is not null
-union
-select distinct coin from public.coinbase_ledger''')
+#cur.execute('''select distinct symbol from public.binance_ledger
+#where symbol is not null
+#union
+#select distinct coin from public.coinbase_ledger''')
 
-owned_coin_list = []
+#owned_coin_list = []
 
-rows = cur.fetchall()
-for r in rows:
+#rows = cur.fetchall()
+#for r in rows:
     #print(r[0])
-    owned_coin_list.append(r[0])
+#    owned_coin_list.append(r[0])
 
 #print(owned_coin_list)
 
 
-cur.close()
-conn.close()
+#cur.close()
+#conn.close()
 
 
 data = requests.get('https://api.coingecko.com/api/v3/coins/list?include_platform=true')
@@ -61,8 +59,8 @@ for d in data:
     #print('*****************')
     for o in owned_coin_list:
 
-        if o.lower() == d['symbol']:
-            print(d)
+        if o.lower() == d['name'].lower():
+            #print(d)
             coin_dict['id'].append(d['id'])
             coin_dict['sym'].append(d['symbol'])
             coin_dict['link'].append('https://api.coingecko.com/api/v3/simple/price?ids={}&vs_currencies=usd'.format(d['id']))
@@ -79,13 +77,13 @@ coin_df['date_time'] = datetime.now()
 coin_df = coin_df.set_index("id")
 
 
-remove_list = ['binance-peg-cardano','binance-peg-bitcoin-cash',"compound-governance-token","binance-peg-dogecoin","golden-ratio-token","binance-peg-litecoin","binance-peg-filecoin", "hymnode"]
+#remove_list = ['binance-peg-cardano','binance-peg-bitcoin-cash',"compound-governance-token","binance-peg-dogecoin","golden-ratio-token","binance-peg-litecoin","binance-peg-filecoin", "hymnode"]
 
-coin_df = coin_df.drop(remove_list)
+#coin_df = coin_df.drop(remove_list)
 
 engine = cs.sql_alc()
 
-
+#print(coin_df)
 
 coin_df.to_sql('prices',con=engine, if_exists = 'append', index = True)
 

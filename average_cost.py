@@ -16,7 +16,10 @@ where coin is not null
 union
 select distinct symbol
 from binance_ledger
-where symbol is not null''')
+where symbol is not null
+union
+select distinct coin
+from wallet''')
 
 
 

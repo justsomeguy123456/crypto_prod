@@ -17,3 +17,9 @@ def getting_coin_list():
     coin_list = df['Coin'].tolist()
 
     return(coin_list)
+
+
+
+owned = getting_coin_list()
+
+print(owned)

@@ -4,6 +4,7 @@ from binance_chain.environment import BinanceEnvironment
 import create_sql as cs
 import pandas as pd
 from datetime import datetime
+import pprint as pp
 
 with open('../bnb_acct.txt', 'r') as fp:
     lines = fp.readlines()
@@ -26,17 +27,25 @@ for l in lines:
     account = client.get_account(l)
     transactions = client.get_transactions(address=l)
 
-    print(account)
-    print(transactions)
-    bnb_dict['coin'].append( 'BNB')
-    bnb_dict['amt'].append(account['balances'][0]['free'])
-    bnb_dict['address'].append(l)
+    #pp.pprint(account['balances'])
+    for x in account['balances']:
+        #print(x)
 
-print(bnb_dict)
+
+
+        #print(transactions)
+        if '-BF2' in x['symbol']:
+            bnb_dict['coin'].append(x['symbol'].strip('-BF2') )
+        else:
+            bnb_dict['coin'].append(x['symbol'] )
+        bnb_dict['amt'].append(x['free'])
+        bnb_dict['address'].append(l)
+
+#print(bnb_dict)
 
 bnb_df = pd.DataFrame.from_dict(bnb_dict)
 bnb_df['date_added'] = datetime.now()
-
+print(bnb_df)
 
 engine = cs.sql_alc()
 

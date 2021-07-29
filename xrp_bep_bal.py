@@ -35,6 +35,7 @@ xrp_bep_df['date_added'] = datetime.now()
 
 engine = cs.sql_alc()
 
+print(xrp_bep_df)
 
 
 xrp_bep_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)

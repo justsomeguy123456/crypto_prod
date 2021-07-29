@@ -1,10 +1,10 @@
 import praw
 import pprint
-
+from datetime import datetime
 import pandas as pd
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
-
+import create_sql as cs
 with open('../reddit.txt', 'r') as fp:
     lines = fp.readlines()
 
@@ -58,7 +58,7 @@ for s in subs:
                     'comment_id':[]
                     }
     total_comments = 0
-    for submission in subreddit.new(limit=6):
+    for submission in subreddit.new(limit=100):
         #pprint.pprint(vars(submission))
         #print(str(submission.title),'-----', submission.id, submission.created_utc, str(submission.stickied))
         if (str(submission.stickied) != 'True') or (str(submission.title).strip() == 'Weekly Discussion Thread') or (str(submission.title).find('Daily Discussion') < -1):
@@ -175,6 +175,13 @@ for s in subs:
 #print(word_tokenize(coment_st))
 
 result_df = pd.DataFrame.from_dict(result)
+result_df['date'] = datetime.now()
+
+engine = cs.sql_alc()
+
+result_df.to_sql('subreddit_sentiments',con=engine, if_exists = 'append', index = False)
+
+engine.dispose()
 
     # = result_df.append(df)
 

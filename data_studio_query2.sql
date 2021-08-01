@@ -53,15 +53,19 @@ select max(time) as time, symbol
 ) a on  a.symbol  = avg_prices_ledger.symbol and a.time = avg_prices_ledger.time
  join(
 select max(time) as time, symbol	,avg_prices_ledger."isBuyer"
-	,case when avg_prices_ledger."isBuyer" = 'Sell' then Min(rolling_qty) else max(rolling_qty) end rolling_qty
+	,case when avg_prices_ledger."isBuyer" = 'Sell' then (
+	 select Min(rolling_qty) from avg_prices_ledger av where av.symbol = avg_prices_ledger.symbol 
+	and av.time = min(avg_prices_ledger.time)
+	) else 	( select max(rolling_qty) from avg_prices_ledger av where av.symbol = avg_prices_ledger.symbol 
+	and av.time = max(avg_prices_ledger.time)) end rolling_qty
 
 	from avg_prices_ledger
-	--where symbol = 'NANO'
+	--where symbol = 'ADA'
 	group by symbol,avg_prices_ledger."isBuyer"
 
 ) b on b.symbol  = avg_prices_ledger.symbol and b.time = avg_prices_ledger.time 
 	and b.rolling_qty = case when avg_prices_ledger.rolling_qty < -0.02 then 0 else avg_prices_ledger.rolling_qty end
---where avg_prices_ledger.symbol = 'NANO'
+--where avg_prices_ledger.symbol = 'ADA'
 	
 	
 	

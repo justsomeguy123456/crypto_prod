@@ -3,7 +3,13 @@ import sys
 import math
 import pprint as pp
 
+'''
+args should be
+coin
+coinbasepro or binance
+dollar amt
 
+'''
 amt = float(sys.argv[3])
 
 if sys.argv[2].lower() == 'coinbasepro':
@@ -86,6 +92,6 @@ if sys.argv[2].lower() == 'binance':
     print(avg_price['weightedAvgPrice'],q)
 
     print('Using binance' )
-    #order = client.order_market_buy(
-    #    symbol=coin,
-    #    quantity=q)
+    order = client.order_market_buy(
+        symbol=coin,
+        quantity=q)

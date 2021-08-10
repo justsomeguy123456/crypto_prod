@@ -1,3 +1,6 @@
+
+import sys
+
 from binance.client import Client
 import math
 with open('../key.txt', 'r') as fp:
@@ -23,9 +26,11 @@ avg_price = tickers = client.get_ticker(symbol=coin)
 for f in info['filters']:
     #print(f)
     if f['filterType'] == 'LOT_SIZE':
-        stepsize = float((f['stepSize']))
 
+        stepsize = float((f['stepSize']))
+print(stepsize)
 pre_quant = int(round(-math.log(stepsize, 10), 0))
+
 print(pre_quant)
 print(avg_price['weightedAvgPrice'])
 #this does something important but I don't know how it works yet
@@ -35,6 +40,6 @@ print(q)
 
 order = client.order_market_buy(
     symbol=coin,
-   quantity=q)
+    quantity=q)
 
 print('just burned {} dollhairs'.format(str(dollar_amt)))

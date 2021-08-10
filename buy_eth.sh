@@ -1,5 +1,5 @@
 #!/bin/sh
-cd /home/nick/python_projects/crypto/crypto_pro
+cd /home/nick/python_projects/crypto/crypto_prod
 
 
-/home/nick/anaconda3/bin/python /home/nick/python_projects/crypto/crypto_prod/buy_coins.py ETH coinbasepro 15
+/home/nick/anaconda3/bin/python /home/nick/python_projects/crypto/crypto_prod/buy_coins.py ETH coinbasepro 25

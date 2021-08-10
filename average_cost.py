@@ -15,6 +15,9 @@ from coinbase_ledger
 where coin is not null
 union
 select distinct symbol
+from coinbasepro_ledger
+union
+select distinct symbol
 from binance_ledger
 where symbol is not null
 union
@@ -58,7 +61,11 @@ for r in row:
     from coinbase_ledger
     where 1=1
     and coin = '{}'
-
+    union
+    select symbol, price,size, total,created_at, side
+	from coinbasepro_ledger
+	where 1=1
+	and symbol = '{}'
 
 
     union
@@ -83,7 +90,7 @@ for r in row:
 
 		group by d.coin, d.price, d.basis, d.date_added,type1
     order by 5
-     '''.format(coin,coin,coin)
+     '''.format(coin,coin,coin,coin)
 
 
 

@@ -23,6 +23,7 @@ for l in lines:
     eth_dict['amt'].append(w3.fromWei(w3.eth.get_balance(l.strip()),'ether'))
     eth_dict['coin'].append('ETH')
     eth_dict['address'].append(l.strip())
+    print(w3.fromWei(w3.eth.get_balance(l.strip()),'ether'))
 
 
 

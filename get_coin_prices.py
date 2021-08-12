@@ -2,7 +2,7 @@
 
 
 import create_sql as cs
-
+import deleting_values as dv
 import json as j
 import requests
 import pandas as pd
@@ -13,33 +13,8 @@ with open('../key.txt', 'r') as fp:
     lines = fp.readlines()
 
 
-#api_key = lines[1].strip()
-#api_secret = lines[2].strip()
-
 
 owned_coin_list = pwn.getting_coin_list()
-
-#conn = cs.pg2()
-#cur = conn.cursor()
-
-
-#cur.execute('''select distinct symbol from public.binance_ledger
-#where symbol is not null
-#union
-#select distinct coin from public.coinbase_ledger''')
-
-#owned_coin_list = []
-
-#rows = cur.fetchall()
-#for r in rows:
-    #print(r[0])
-#    owned_coin_list.append(r[0])
-
-#print(owned_coin_list)
-
-
-#cur.close()
-#conn.close()
 
 
 data = requests.get('https://api.coingecko.com/api/v3/coins/list?include_platform=true')
@@ -77,9 +52,6 @@ coin_df['date_time'] = datetime.now()
 coin_df = coin_df.set_index("id")
 
 
-#remove_list = ['binance-peg-cardano','binance-peg-bitcoin-cash',"compound-governance-token","binance-peg-dogecoin","golden-ratio-token","binance-peg-litecoin","binance-peg-filecoin", "hymnode"]
-
-#coin_df = coin_df.drop(remove_list)
 
 engine = cs.sql_alc()
 
@@ -88,3 +60,5 @@ engine = cs.sql_alc()
 coin_df.to_sql('prices',con=engine, if_exists = 'append', index = True)
 
 engine.dispose()
+
+dv.deleteing_prices()

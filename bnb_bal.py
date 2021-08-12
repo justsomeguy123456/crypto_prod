@@ -2,6 +2,7 @@ from binance_chain.http import HttpApiClient
 from binance_chain.constants import KlineInterval
 from binance_chain.environment import BinanceEnvironment
 import create_sql as cs
+import deleting_values as dv
 import pandas as pd
 from datetime import datetime
 import pprint as pp
@@ -34,12 +35,18 @@ for l in lines:
 
 
         #print(transactions)
-        if '-BF2' in x['symbol']:
+        if '-BF2' in x['symbol'] :
             bnb_dict['coin'].append(x['symbol'].strip('-BF2') )
+            sym = (x['symbol'].strip('-BF2') )
+        if '-BD1' in x['symbol'] :
+            bnb_dict['coin'].append(x['symbol'].strip('-BD1') )
+            sym = (x['symbol'].strip('-BF2') )
         else:
             bnb_dict['coin'].append(x['symbol'] )
+            sym = (x['symbol'] )
         bnb_dict['amt'].append(x['free'])
         bnb_dict['address'].append(l)
+
 
 #print(bnb_dict)
 
@@ -53,4 +60,13 @@ engine = cs.sql_alc()
 
 bnb_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
 
+
+
+
 engine.dispose()
+
+
+
+
+for c in bnb_dict['coin']:
+    dv.deleting_wallet_vals(c)

@@ -2,7 +2,7 @@ from web3 import Web3
 import create_sql as cs
 import pandas as pd
 from datetime import datetime
-
+import deleting_values as dv
 
 with open('../infura.txt', 'r') as fp:
     lines = fp.readlines()
@@ -41,3 +41,6 @@ engine = cs.sql_alc()
 eth_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
 
 engine.dispose()
+
+
+dv.deleting_wallet_vals('ETH')

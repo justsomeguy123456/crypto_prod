@@ -2,6 +2,7 @@ import pandas as pd
 import time
 import create_sql as cs
 from datetime import datetime
+import deleting_values as dv
 conn = cs.pg2()
 
 
@@ -229,4 +230,7 @@ df_max_date.to_sql('crypto_portfolio_historical',con=engine, if_exists = 'append
 #fin_df.to_excel('../testing3.xlsx')
 
 engine.dispose()
+
+dv.deleteing_historical()
+
 print('Avg cost done')

@@ -2,7 +2,7 @@ import blockcypher
 import pandas as pd
 import create_sql as cs
 from datetime import datetime
-
+import deleting_values as dv
 with open('../btc_acct.txt','r') as fp:
     lines = fp.readlines()
 
@@ -40,3 +40,5 @@ engine = cs.sql_alc()
 btc_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
 
 engine.dispose()
+
+dv.deleting_wallet_vals('BTC')

@@ -2,7 +2,7 @@
 import create_sql as cs
 import pandas as pd
 from datetime import datetime
-
+import deleting_values as dv
 import requests
 
 link_dict = {'coin':[],
@@ -50,3 +50,5 @@ engine = cs.sql_alc()
 link_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
 
 engine.dispose()
+
+dv.deleting_wallet_vals('LINK')

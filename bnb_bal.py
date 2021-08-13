@@ -40,7 +40,7 @@ for l in lines:
             sym = (x['symbol'].strip('-BF2') )
         if '-BD1' in x['symbol'] :
             bnb_dict['coin'].append(x['symbol'].strip('-BD1') )
-            sym = (x['symbol'].strip('-BF2') )
+            sym = (x['symbol'].strip('-BD1') )
         else:
             bnb_dict['coin'].append(x['symbol'] )
             sym = (x['symbol'] )

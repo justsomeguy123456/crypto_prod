@@ -38,9 +38,11 @@ for l in lines:
         if '-BF2' in x['symbol'] :
             bnb_dict['coin'].append(x['symbol'].strip('-BF2') )
             sym = (x['symbol'].strip('-BF2') )
-        if '-BD1' in x['symbol'] :
-            bnb_dict['coin'].append(x['symbol'].strip('-BD1') )
-            sym = (x['symbol'].strip('-BD1') )
+        elif '-BD1' in x['symbol'] :
+            #bnb_dict['coin'].append(x['symbol'].strip('-BD1') )
+            bnb_dict['coin'].append('BUSD')
+            sym = 'BUSD'#(x['symbol'].strip('-BD1') )
+            print(x['symbol'])
         else:
             bnb_dict['coin'].append(x['symbol'] )
             sym = (x['symbol'] )
@@ -48,7 +50,7 @@ for l in lines:
         bnb_dict['address'].append(l)
 
 
-#print(bnb_dict)
+print(bnb_dict)
 
 bnb_df = pd.DataFrame.from_dict(bnb_dict)
 bnb_df['date_added'] = datetime.now()
@@ -69,4 +71,5 @@ engine.dispose()
 
 
 for c in bnb_dict['coin']:
+    print(c)
     dv.deleting_wallet_vals(c)

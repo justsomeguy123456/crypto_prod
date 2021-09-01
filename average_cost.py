@@ -75,7 +75,7 @@ for r in row:
 	(
 	select distinct wallet.coin,
      0 price ,
-   case when wallet.coin = 'BNB' then wallet.amt::NUMERIC + 1 else wallet.amt::NUMERIC end amt
+   case when wallet.coin = 'BNB' then wallet.amt::NUMERIC + 0 else wallet.amt::NUMERIC end amt
     ,0 basis
     ,wallet.date_added,
     'wallet' type1

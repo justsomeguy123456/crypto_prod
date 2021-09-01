@@ -53,6 +53,7 @@ for l in lines:
 print(bnb_dict)
 
 bnb_df = pd.DataFrame.from_dict(bnb_dict)
+bnb_df = bnb_df[bnb_df['coin'] == 'BNB']
 bnb_df['date_added'] = datetime.now()
 print(bnb_df)
 
@@ -70,6 +71,6 @@ engine.dispose()
 
 
 
-for c in bnb_dict['coin']:
-    print(c)
-    dv.deleting_wallet_vals(c)
+#for c in bnb_dict['coin']:
+#    print(c)
+dv.deleting_wallet_vals('BNB')

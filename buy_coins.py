@@ -49,17 +49,20 @@ if sys.argv[2].lower() == 'coinbasepro':
 
     if qnt < min_size:
         qnt = min_size
+        amt = qnt*price
 
     print(product)
     print(price,qnt)
 
     print('Using cbpro' )
 
-    auth_client.place_limit_order(product_id=product,
-                                  side='buy',
-                                  price=str(price),
-                                  size=str(qnt))
-
+    #auth_client.place_limit_order(product_id=product,
+    #                              side='buy',
+    #                              price=str(price),
+    #                              size=str(qnt))
+    auth_client.place_market_order(product_id=product,
+                               side='buy',
+                               funds=str(amt))
 
 if sys.argv[2].lower() == 'binance':
 

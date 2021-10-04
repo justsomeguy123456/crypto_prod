@@ -97,7 +97,9 @@ for r in row:
 
     df = pd.read_sql_query(sql,conn)
 
-    df['time'] = df['time'].dt.tz_localize(None)
+    print(df['time'] )
+    #df.to_excel('../test.xlsx')
+    df['time'] = df['time']#.dt.tz_localize(None)
     df['rolling_qty'] =0.00000000
     df['rolling_basis'] =0.00000000
     df['avg_price'] =0.00000000
@@ -228,6 +230,9 @@ engine = cs.sql_alc()
 fin_df.to_sql('avg_prices_ledger',con=engine, if_exists = 'replace', index = True)
 df_max_date.to_sql('crypto_portfolio_historical',con=engine, if_exists = 'append', index = False)
 #fin_df.to_excel('../testing3.xlsx')
+
+date_ran = pd.DataFrame.from_dict({'asof':[datetime.now()]})
+date_ran.to_sql('as_of_date',con=engine, if_exists = 'replace', index = True)
 
 engine.dispose()
 

@@ -2,7 +2,7 @@ from coinbase.wallet.client import Client
 import pandas as pd
 import time
 import create_sql as cs
-import psycopg2 as pyd
+
 from datetime import datetime
 
 

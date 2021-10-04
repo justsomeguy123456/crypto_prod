@@ -5,7 +5,7 @@ from itertools import islice
 import time
 from datetime import datetime
 import create_sql as cs
-import psycopg2 as pyd
+
 
 with open('../coinbasepro_key.txt', 'r') as fp:
     lines = fp.readlines()

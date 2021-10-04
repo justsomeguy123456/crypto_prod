@@ -4,7 +4,7 @@
 
 def sql_alc():
     from sqlalchemy import create_engine
-    with open('../postgres.txt', 'r') as fp:
+    with open('../postgres_local.txt', 'r') as fp:
         lines = fp.readlines()
 
 
@@ -23,7 +23,7 @@ def sql_alc():
 
 def pg2():
     import psycopg2 as pyd
-    with open('../postgres.txt', 'r') as fp:
+    with open('../postgres_local.txt', 'r') as fp:
         lines = fp.readlines()
 
 

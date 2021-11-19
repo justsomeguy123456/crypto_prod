@@ -12,7 +12,7 @@ def sql_alc():
     db_name = lines[2].strip()
     db_uname = lines[4].strip()
     db_pw = lines[6].strip()
-    db_ip = str(lines[8].strip())
+    db_ip = str(lines[10].strip())
 
     engine_string = ('postgresql://{}:{}@{}:5432/{}').format(db_uname,db_pw,db_ip,db_name)
     #print(engine_string)
@@ -31,7 +31,7 @@ def pg2():
     db_name = lines[2].strip()
     db_uname = lines[4].strip()
     db_pw = lines[6].strip()
-    db_ip = str(lines[8].strip())
+    db_ip = str(lines[10].strip())
 
 
     conn = pyd.connect(host = db_ip, database = db_name, user = db_uname, password = db_pw )

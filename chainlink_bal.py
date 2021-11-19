@@ -16,7 +16,7 @@ with open('../etherscan.txt', 'r') as fp:
 
 key = lines[0].strip()
 
-contract = '0x514910771af9ca656af840dff83e8264ecf986ca'
+contract = '0x03fF0ff224f904be3118461335064bB48Df47938'
 
 with open('../eth_wallets.txt', 'r') as fp:
     lines = fp.readlines()

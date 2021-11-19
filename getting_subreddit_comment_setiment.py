@@ -21,8 +21,8 @@ reddit = praw.Reddit(
 
 
 
-#print(reddit.user.me())
-#print(reddit.read_only)
+print(reddit.user.me())
+print(reddit.read_only)
 
 subs = ['Ethereum','bitcoin','CryptoCurrency']
 

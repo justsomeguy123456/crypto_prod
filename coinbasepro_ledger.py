@@ -42,6 +42,7 @@ for a in accts:
     history_list = list(auth_client.get_account_history(a['id'].strip(),limit=100))
     coin = a['currency'].strip()
 
+    print(history_list)
 
 
 
@@ -79,26 +80,26 @@ for a in accts:
         except:
             print('empty')
 
-    #for h in history_list:
+    for h in history_list:
 
-    #    if h['type'] == 'transfer' and coin != 'USD':
-    #        fills_dict['symbol'].append(coin)
-    #        fills_dict['created_at'].append(h['created_at'])
-    #        fills_dict['fee'].append(0.000000)
-    #        fills_dict['liquidity'].append('')
-    #        fills_dict['order_id'].append(h['details']['transfer_id'])
-    #        fills_dict['price'].append(0.00000)
-    #        fills_dict['product_id'].append('')
-    #        fills_dict['profile_id'].append('')
-    #        fills_dict['settled'].append('')
-    #        fills_dict['side'].append('send')
-    #        fills_dict['size'].append(float(h['amount']))
-    #        fills_dict['trade_id'].append('')
+        if h['type'] == 'transfer' and coin == 'ENJ':
+            fills_dict['symbol'].append(coin)
+            fills_dict['created_at'].append(h['created_at'])
+            fills_dict['fee'].append(0.000000)
+            fills_dict['liquidity'].append('')
+            fills_dict['order_id'].append(h['details']['transfer_id'])
+            fills_dict['price'].append(0.00000)
+            fills_dict['product_id'].append('')
+            fills_dict['profile_id'].append('')
+            fills_dict['settled'].append('')
+            fills_dict['side'].append('send')
+            fills_dict['size'].append(float(h['amount']))
+            fills_dict['trade_id'].append('')
 
-    #        fills_dict['usd_volume'].append(0.000000)
-    #        fills_dict['total'].append(0.000000)
+            fills_dict['usd_volume'].append(0.000000)
+            fills_dict['total'].append(0.000000)
 
-    #        fills_dict['user_id'].append('')
+            fills_dict['user_id'].append('')
 
     time.sleep(.5)
 pp.pprint(fills_dict)

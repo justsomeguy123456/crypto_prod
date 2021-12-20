@@ -158,7 +158,7 @@ for w in withdraws:
     deposit_dict['commission'].append(float(w['transactionFee']))
     deposit_dict['commissionAsset'].append(w['coin'])
     deposit_dict['commission_val'] = 0
-    deposit_dict['time'].append(datetime.timestamp(datetime.strptime(w['applyTime'],'%Y-%m-%d %H:%M:%S'))*1000)
+    deposit_dict['time'].append((datetime.timestamp(datetime.strptime(w['applyTime'],'%Y-%m-%d %H:%M:%S'))*1000)-14400000)
     deposit_dict['isBuyer'] = 'Send'
     deposit_dict['isMaker']= 0
     deposit_dict['isBestMatch'] = 0

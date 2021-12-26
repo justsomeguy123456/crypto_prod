@@ -17,20 +17,21 @@ with open('../hnt_wallets.txt', 'r') as fp:
 
 for l in lines:
 
+    print(l)
+    url = "https://api.helium.io/v1/accounts/{}".format(l.strip())
 
-    url = "https://api.helium.io/v1/accounts/{}".format(l)
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.37'}
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    data_raw = requests.get(url,headers =headers)
+    data = j.loads(data_raw.text)
 
-    data = requests.get(url,headers =headers)
-    data = j.loads(data.text)
-
+    print(data)
     #print(type(data))
-#print(response.links)
+    print(data_raw.links)
 #print(response.url)
 #print(response.headers)
     #print(data)
-
+    print(float(data['data']['balance'])*float(0.00000001))
     helium_dict['coin'].append('HNT')
     helium_dict['amt'].append(float(data['data']['balance'])*float(0.00000001))
     helium_dict['address'].append(l)
@@ -42,6 +43,8 @@ for l in lines:
 helium_df = pd.DataFrame.from_dict(helium_dict)
 
 helium_df['date_added'] = datetime.now()
+
+print(helium_df)
 
 engine = cs.sql_alc()
 

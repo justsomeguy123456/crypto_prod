@@ -6,9 +6,15 @@ import deleting_values as dv
 import pandas as pd
 from datetime import datetime
 import pprint as pp
+import json as j
+import os
+from dotenv import load_dotenv
 
-with open('../bnb_acct.txt', 'r') as fp:
-    lines = fp.readlines()
+load_dotenv()
+bnb_adds = j.loads(os.getenv("BNB_ADDR_LIST"))
+
+#with open('../bnb_acct.txt', 'r') as fp:
+#    lines = fp.readlines()
 
 
 
@@ -23,8 +29,9 @@ bnb_dict = {'coin':[],
 
 }
 
-for l in lines:
+for l in bnb_adds:
     l = l.strip()
+    print(l)
     account = client.get_account(l)
     transactions = client.get_transactions(address=l)
 

@@ -3,42 +3,40 @@ import pandas as pd
 import create_sql as cs
 from datetime import datetime
 import deleting_values as dv
-with open('../btc_acct.txt','r') as fp:
-    lines = fp.readlines()
+import json as j
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+btc_adds = j.loads(os.getenv("BTC_ADDR_LIST"))
+# with open('../btc_acct.txt','r') as fp:
+#    lines = fp.readlines()
 
 
+btc_dict = {"coin": [], "amt": [], "address": []}
 
 
-btc_dict = {'coin':[],
-            'amt':[],
-            'address':[]
-            }
-
-
-
-
-for l in lines:
+for l in btc_adds:
     l = l.strip()
     print(l)
     bal = blockcypher.get_total_balance(l)
     print(bal)
-    bal = blockcypher.from_base_unit(bal, 'btc')
+    bal = blockcypher.from_base_unit(bal, "btc")
     print(bal)
-    btc_dict['coin'].append('BTC')
-    btc_dict['amt'].append(bal)
-    btc_dict['address'].append(l)
+    btc_dict["coin"].append("BTC")
+    btc_dict["amt"].append(bal)
+    btc_dict["address"].append(l)
 
 btc_df = pd.DataFrame.from_dict(btc_dict)
 
-btc_df['date_added'] = datetime.now()
+btc_df["date_added"] = datetime.now()
 
 
 engine = cs.sql_alc()
 
 
-
-btc_df.to_sql('wallet',con=engine, if_exists = 'append', index = False)
+btc_df.to_sql("wallet", con=engine, if_exists="append", index=False)
 
 engine.dispose()
 
-dv.deleting_wallet_vals('BTC')
+dv.deleting_wallet_vals("BTC")

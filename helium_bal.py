@@ -4,6 +4,9 @@ import json as j
 import create_sql as cs
 from datetime import datetime
 import deleting_values as dv
+import os
+from dotenv import load_dotenv
+load_dotenv()
 helium_dict = {
 'coin':[],
 'amt':[],
@@ -12,10 +15,12 @@ helium_dict = {
 
 }
 
-with open('../hnt_wallets.txt', 'r') as fp:
-    lines = fp.readlines()
 
-for l in lines:
+hnt_adds = j.loads(os.getenv("HNT_ADDR_LIST"))
+#with open('../hnt_wallets.txt', 'r') as fp:
+#    lines = fp.readlines()
+
+for l in hnt_adds:
 
     print(l)
     url = "https://api.helium.io/v1/accounts/{}".format(l.strip())

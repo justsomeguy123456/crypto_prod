@@ -2,11 +2,15 @@
 
 def getting_coin_list():
     import pandas as pd
-    with open('../google_sheets.txt','r') as fp:
-        lines = fp.readlines()
+    import json as j
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    #with open('../google_sheets.txt','r') as fp:
+    #    lines = fp.readlines()
 
-    sheet_id = lines[1].strip()
-
+    #sheet_id = lines[1].strip()
+    sheet_id = os.getenv("GOOGLE_SHEETS_CRYPTO")
     sheet_name = 'tickers'
 
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
@@ -31,10 +35,19 @@ def getting_wallet_bals():
     import create_sql as cs
     from datetime import datetime
     import deleting_values as dv
-    with open('../google_sheets.txt','r') as fp:
-        lines = fp.readlines()
+    import json as j
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+        #with open('../google_sheets.txt','r') as fp:
+        #    lines = fp.readlines()
 
-    sheet_id = lines[1].strip()
+        #sheet_id = lines[1].strip()
+    sheet_id = os.getenv("GOOGLE_SHEETS_CRYPTO")
+    #with open('../google_sheets.txt','r') as fp:
+    #    lines = fp.readlines()
+
+    #sheet_id = lines[1].strip()
 
     sheet_name = 'wallets'
 

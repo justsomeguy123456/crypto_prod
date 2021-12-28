@@ -5,17 +5,21 @@ import pandas as pd
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import create_sql as cs
-with open('../reddit.txt', 'r') as fp:
-    lines = fp.readlines()
-
+import json as j
+import os
+from dotenv import load_dotenv
+load_dotenv()
+#with open('../reddit.txt', 'r') as fp:
+#    lines = fp.readlines()
+creds = j.loads(os.getenv("REDDIT_API"))
 
 
 reddit = praw.Reddit(
-    client_id=lines[0].strip(),
-    client_secret=lines[1].strip(),
-    password=lines[2].strip(),
-    user_agent=lines[3].strip(),
-    username=lines[4].strip(),
+    client_id=creds["client_id"].strip(),
+    client_secret=creds["client_secret"].strip(),
+    password=creds["password"].strip(),
+    user_agent=creds["user_agent"].strip(),
+    username=creds["username"].strip(),
 )
 
 

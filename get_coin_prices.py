@@ -9,8 +9,8 @@ import pandas as pd
 from datetime import datetime
 import getting_owned_coin_list as pwn
 
-with open('../key.txt', 'r') as fp:
-    lines = fp.readlines()
+#with open('../key.txt', 'r') as fp:
+#    lines = fp.readlines()
 
 
 

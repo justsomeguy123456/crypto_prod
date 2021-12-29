@@ -11,12 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 creds = j.loads(os.getenv("BINANCE_API"))
-# with open('../key.txt', 'r') as fp:
-#    lines = fp.readlines()
-
-
-# api_key = lines[1].strip()
-# api_secret = lines[2].strip()
 
 api_key = creds["key"].strip()
 api_secret = creds["sec"].strip()
@@ -25,10 +19,6 @@ api_secret = creds["sec"].strip()
 client = Client(api_key, api_secret, tld="us")
 
 
-""" this is getting list of coins. in the future
-this list will be every coin listed on binance    """
-
-# coin = ['BTC','ETH','ADA','DOGE','LINK','ATOM','BNB','LTC','XLM','SOL','VTHO']
 prices = client.get_all_tickers()
 coin = []
 

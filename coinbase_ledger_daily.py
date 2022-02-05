@@ -23,7 +23,7 @@ api_secret = creds["sec"].strip()
 
 
 client = Client(api_key, api_secret)
-acct = client.get_accounts(limit=100)
+acct = client.get_accounts(limit=[300])
 
 acct_dict = {"coin": [], "dollar_amt": [], "amt": [], "id": []}
 for w in acct.data:
@@ -47,16 +47,17 @@ tran_dict = {
     "basis_currency": [],
     "unit_price": [],
     "unit_price_currency": [],
+    "section": [],
 }
 
 for v in acct_dict["id"]:
 
     id = v
 
-    buys = client.get_buys(id, limit=100)
+    buys = client.get_buys(id, limit=300)
 
-    sell = client.get_sells(id, limit=100)
-    tran = client.get_transactions(id, limit=100)
+    sell = client.get_sells(id, limit=300)
+    tran = client.get_transactions(id, limit=300)
 
     for s in sell.data:
 
@@ -72,6 +73,7 @@ for v in acct_dict["id"]:
         tran_dict["basis_currency"].append(s["subtotal"]["currency"])
         tran_dict["unit_price"].append(float(s["unit_price"]["amount"]))
         tran_dict["unit_price_currency"].append(s["unit_price"]["currency"])
+        tran_dict["section"].append("sells")
 
     for b in buys.data:
         tran_dict["amt"].append(float(b["amount"]["amount"]))
@@ -86,33 +88,34 @@ for v in acct_dict["id"]:
         tran_dict["basis_currency"].append(b["subtotal"]["currency"])
         tran_dict["unit_price"].append(float(b["unit_price"]["amount"]))
         tran_dict["unit_price_currency"].append(b["unit_price"]["currency"])
-
+        tran_dict["section"].append("buys")
     for t in tran.data:
 
         # print('*************************************')
-        if t["type"] == "trade" or t["type"] == "send":
-            tran_dict["amt"].append(float(t["amount"]["amount"]))
-            tran_dict["coin"].append(t["amount"]["currency"])
-            tran_dict["committed"].append("TRUE")
-            tran_dict["created_at"].append(t["created_at"])
-            tran_dict["fee_amt"].append(float(0))
-            tran_dict["fee_currency"].append(t["native_amount"]["currency"])
-            tran_dict["resource"].append(t["type"])
-            tran_dict["status"].append(t["status"])
-            if t["type"] == "send":
-                tran_dict["basis"].append(float(0))
-            else:
-                tran_dict["basis"].append(float(t["native_amount"]["amount"]))
-            tran_dict["basis_currency"].append(t["native_amount"]["currency"])
-            tran_dict["unit_price"].append(
-                float(t["native_amount"]["amount"]) / float(t["amount"]["amount"])
-            )
-            tran_dict["unit_price_currency"].append(t["native_amount"]["currency"])
+        # if t["type"] == "trade" or t["type"] == "send":
+        tran_dict["amt"].append(float(t["amount"]["amount"]))
+        tran_dict["coin"].append(t["amount"]["currency"])
+        tran_dict["committed"].append("TRUE")
+        tran_dict["created_at"].append(t["created_at"])
+        tran_dict["fee_amt"].append(float(0))
+        tran_dict["fee_currency"].append(t["native_amount"]["currency"])
+        tran_dict["resource"].append(t["type"])
+        tran_dict["status"].append(t["status"])
+        if (t["type"] == "send") or (t["type"] == "pro_withdrawal") or (t["type"] == "exchange_deposit")or (t["type"] == "pro_deposit"):
+            tran_dict["basis"].append(float(0))
+        else:
+            tran_dict["basis"].append(float(t["native_amount"]["amount"]))
+        tran_dict["basis_currency"].append(t["native_amount"]["currency"])
+        tran_dict["unit_price"].append(
+            float(t["native_amount"]["amount"]) / float(t["amount"]["amount"])
+        )
+        tran_dict["unit_price_currency"].append(t["native_amount"]["currency"])
+        tran_dict["section"].append("trans")
     print("*********")
     time.sleep(0.3)
 
 ledger_df = pd.DataFrame.from_dict(tran_dict)
-ledger_df.loc[ledger_df["resource"] == "sell", "basis"] = ledger_df["basis"] * -1.00
+# ledger_df.loc[ledger_df["resource"] == "sell", "basis"] = ledger_df["basis"] * -1.00
 
 
 ledger_df["date_added"] = datetime.now()
@@ -122,19 +125,20 @@ ledger_df.to_excel("../coinbase_ledger.xlsx")
 
 ledger_df["created_at"] = pd.to_datetime(ledger_df["created_at"])
 
-
+ledger_df = ledger_df[ledger_df["section"] == "trans"]
 conn = cs.pg2()
 
 cur = conn.cursor()
+try:
+    cur.execute("select max(cl.created_at) date from public.coinbase_ledger2 cl")
 
-cur.execute("select max(cl.created_at) date from public.coinbase_ledger cl")
+    row = cur.fetchone()
+    for r in row:
+        date = row[0]
 
-
-row = cur.fetchone()
-for r in row:
-    date = row[0]
-
-ledger_df = ledger_df[ledger_df["created_at"] > date]
+    ledger_df = ledger_df[ledger_df["created_at"] > date]
+except:
+    print("no table")
 
 ledger_df = ledger_df.copy(deep=True)
 
@@ -145,5 +149,5 @@ conn.close()
 engine = cs.sql_alc()
 
 
-ledger_df.to_sql("coinbase_ledger", con=engine, if_exists="append", index=False)
+ledger_df.to_sql("coinbase_ledger2", con=engine, if_exists="append", index=False)
 engine.dispose()

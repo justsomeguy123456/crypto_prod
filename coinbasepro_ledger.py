@@ -50,7 +50,7 @@ fills_dict = {
 
 # history_list = list(auth_client.get_account_history('475d055e-591d-41d3-9563-5339ee679ac3',limit=100))
 for a in accts:
-    history_list = list(auth_client.get_account_history(a["id"].strip(), limit=100))
+    history_list = list(auth_client.get_account_history(a["id"].strip(), limit=300))
     coin = a["currency"].strip()
 
     print(history_list)
@@ -94,7 +94,7 @@ for a in accts:
 
     for h in history_list:
 
-        if h["type"] == "transfer" and coin == "ENJ":
+        if h["type"] == "transfer": #and coin == "ENJ":
             fills_dict["symbol"].append(coin)
             fills_dict["created_at"].append(h["created_at"])
             fills_dict["fee"].append(0.000000)
@@ -125,7 +125,7 @@ conn = cs.pg2()
 
 cur = conn.cursor()
 try:
-    cur.execute("select max(cl.created_at) date from public.coinbasepro_ledger cl")
+    cur.execute("select max(cl.created_at) date from public.coinbasepro_ledger2 cl")
 
     row = cur.fetchone()
     for r in row:
@@ -142,7 +142,7 @@ conn.close()
 engine = cs.sql_alc()
 
 
-fills_df.to_sql("coinbasepro_ledger", con=engine, if_exists="append", index=False)
+fills_df.to_sql("coinbasepro_ledger2", con=engine, if_exists="append", index=False)
 engine.dispose()
 
 

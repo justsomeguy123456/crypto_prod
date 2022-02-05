@@ -12,11 +12,14 @@ conn = cs.pg2()
 cur = conn.cursor()
 
 cur.execute('''select distinct coin
-from coinbase_ledger
+from coinbase_ledger2
 where coin is not null
+and coin not in ('USDC', 'USD')
 union
 select distinct symbol
-from coinbasepro_ledger
+from coinbasepro_ledger2
+where 1=1
+and symbol not in ('USDC', 'USD')
 union
 select distinct symbol
 from binance_ledger
@@ -59,12 +62,12 @@ for r in row:
     and symbol = '{}'
     union
     select coin, unit_price, amt, basis, created_at, resource
-    from coinbase_ledger
+    from coinbase_ledger2
     where 1=1
     and coin = '{}'
     union
     select symbol, price,size, total,created_at, side
-	from coinbasepro_ledger
+	from coinbasepro_ledger2
 	where 1=1
 	and symbol = '{}'
 
@@ -112,7 +115,7 @@ for r in row:
     realized_gain_total = 0.00000000
 
     for index, row in df.iterrows():
-        print('Doing shit')
+        #print('Doing shit')
         if  row['isBuyer'].upper()  == 'BUY':
             #print(row['isBuyer'])
             #print('buy',index)
@@ -158,7 +161,7 @@ for r in row:
             df.at[index,'rolling_basis'] = rolling_basis
             df.at[index,'avg_price'] = avg_price
             df.at[index,'realized_gain_total'] = realized_gain_total
-        if row['isBuyer'].upper() == 'SEND':
+        if (row['isBuyer'].upper() == 'SEND') or (row['isBuyer'].upper() == 'pro_withdrawal'.upper())or (row['isBuyer'].upper() == 'exchange_deposit'.upper())or (row['isBuyer'].upper() == 'pro_deposit'.upper()):
             rolling_qty = rolling_qty + row['qty']
             try:
                 avg_price = rolling_basis / rolling_qty
@@ -174,7 +177,7 @@ for r in row:
             if row['quoteQty'] <= 0:
                 realized_gain_total = realized_gain_total + (row['qty'] * avg_price)*-1  + row['quoteQty']
                 rolling_qty = rolling_qty + row['qty']
-                rolling_basis = rolling_qty * avg_price
+                rolling_basis = rolling_basis + row['quoteQty']
             else:
                 rolling_basis = rolling_basis + row['quoteQty']
                 rolling_qty = rolling_qty + row['qty']
@@ -189,7 +192,7 @@ for r in row:
             df.at[index,'avg_price'] = avg_price
             df.at[index,'realized_gain_total'] = realized_gain_total
 
-        if  row['isBuyer'].upper()  == 'DIV':
+        if  (row['isBuyer'].upper()  == 'DIV') or (row['isBuyer'].upper()  == 'INFLATION_REWARD') :
             #print(row['isBuyer'])
             #print('buy',index)
             rolling_basis = rolling_basis
@@ -227,8 +230,8 @@ cur.close()
 conn.close()
 
 engine = cs.sql_alc()
-fin_df.to_sql('avg_prices_ledger',con=engine, if_exists = 'replace', index = True)
-df_max_date.to_sql('crypto_portfolio_historical',con=engine, if_exists = 'append', index = False)
+fin_df.to_sql('avg_prices_ledger2',con=engine, if_exists = 'replace', index = True)
+df_max_date.to_sql('crypto_portfolio_historical2',con=engine, if_exists = 'append', index = False)
 #fin_df.to_excel('../testing3.xlsx')
 
 date_ran = pd.DataFrame.from_dict({'asof':[datetime.now()]})
@@ -236,6 +239,6 @@ date_ran.to_sql('as_of_date',con=engine, if_exists = 'replace', index = True)
 
 engine.dispose()
 
-dv.deleteing_historical()
+#dv.deleteing_historical()
 
 print('Avg cost done')
